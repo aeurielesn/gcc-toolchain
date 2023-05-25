@@ -304,6 +304,70 @@ def _impl(ctx):
         ],
     )
 
+    cpp11_standard_feature = feature(
+        name = "cpp11_standard",
+        flag_sets = [
+            flag_set(
+                actions = all_cpp_compile_actions + [ACTION_NAMES.lto_backend],
+                flag_groups = [flag_group(flags = ["-std=c++11"])],
+            ),
+        ],
+    )
+
+    cpp17_standard_feature = feature(
+        name = "cpp17_standard",
+        flag_sets = [
+            flag_set(
+                actions = all_cpp_compile_actions + [ACTION_NAMES.lto_backend],
+                flag_groups = [flag_group(flags = ["-std=c++17"])],
+            ),
+        ],
+    )
+
+    cpp0x_standard_feature = feature(
+        name = "cpp0x_standard",
+        flag_sets = [
+            flag_set(
+                actions = all_cpp_compile_actions + [ACTION_NAMES.lto_backend],
+                flag_groups = [flag_group(flags = ["-std=c++0x"])],
+            ),
+        ],
+    )
+
+    treat_warnings_as_errors_feature = feature(
+        name = "treat_warnings_as_errors",
+        flag_sets = [
+            flag_set(
+                actions = [ACTION_NAMES.c_compile, ACTION_NAMES.cpp_compile],
+                flag_groups = [flag_group(flags = ["-Werror"])],
+            ),
+            flag_set(
+                actions = all_link_actions,
+                flag_groups = [flag_group(flags = ["-Wl,-fatal-warnings"])],
+            ),
+        ],
+    )
+
+    no_deprecated_string_conversions_warnings_feature = feature(
+        name = "no_deprecated_string_conversions_warnings",
+        flag_sets = [
+            flag_set(
+                actions = [ACTION_NAMES.c_compile, ACTION_NAMES.cpp_compile],
+                flag_groups = [flag_group(flags = ["-Wno-write-strings"])],
+            ),
+        ],
+    )
+
+    no_deprecated_declarations_warnings_feature = feature(
+        name = "no_deprecated_declarations_warnings",
+        flag_sets = [
+            flag_set(
+                actions = [ACTION_NAMES.c_compile, ACTION_NAMES.cpp_compile],
+                flag_groups = [flag_group(flags = ["-Wno-deprecated-declarations"])],
+            ),
+        ],
+    )
+
     sanitizers = [
         struct(
             name = "asan",
@@ -556,6 +620,12 @@ def _impl(ctx):
         extra_fflags_feature,
         extra_ldflags_feature,
         includes_feature,
+        treat_warnings_as_errors_feature,
+        no_deprecated_string_conversions_warnings_feature,
+        no_deprecated_declarations_warnings_feature,
+        cpp11_standard_feature,
+        cpp17_standard_feature,
+        cpp0x_standard_feature,
     ]
 
     return [
